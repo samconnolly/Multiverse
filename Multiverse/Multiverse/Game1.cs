@@ -24,7 +24,7 @@ namespace Multiverse
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
 
         }
 
@@ -62,11 +62,18 @@ namespace Multiverse
         GridTileRegion tiles;
 
         // in game objects
-        City city;
-        City otherCity;
-        City anotherCity;
 
-        List<City> cities;
+        Building dwellBlock;
+        Building dwellBlockLarge;
+        Building govTower;
+        Building Factory;
+        Building Arena;
+
+        ModCity modCity;
+        ModCity modCity2;
+        ModCity homeModCity;
+
+        List<ModCity> modCities;
 
         DeadObject universe;
         DeadUIObject uiball;
@@ -104,27 +111,38 @@ namespace Multiverse
             // spacescape
             tiles = new GridTileRegion(Content.Load<Texture2D>("starTiles"), new Vector2(-1, 0),new Vector2(100,100), isoGrid,random);
 
-            // game objects
+            // --- game objects ----------
+
+            // ships
             trader = new Ship("Trading Ship", Content.Load<Texture2D>("cargoShip"));
             transport = new Ship("Transport Ship", Content.Load<Texture2D>("cargoShip"));
             
+            // materials
             metal = new Material("Metal");
             rock = new Material("Rock");
             gems = new Material("Gemstones");
 
-            city = new City("Home City", Content.Load<Texture2D>("city"), Content.Load<Texture2D>("cityHigh"), Content.Load<Texture2D>("cityClick"),new Vector2(11, 12), isoGrid,new Tuple<float,float,float>(0.1f,0.6f,0.3f),new List<Ship>{trader,transport},new List<Material>{rock,metal},true);
-            otherCity = new City("Other City", Content.Load<Texture2D>("city"), Content.Load<Texture2D>("cityHigh"), Content.Load<Texture2D>("cityClick"), new Vector2(25, 27), isoGrid, new Tuple<float, float, float>(0.22f, 0.5f, 0.28f), new List<Ship> { trader }, new List<Material> { metal, gems });
-            anotherCity = new City("Another City", Content.Load<Texture2D>("city"), Content.Load<Texture2D>("cityHigh"), Content.Load<Texture2D>("cityClick"), new Vector2(3, 24), isoGrid, new Tuple<float, float, float>(0.2f, 0.4f, 0.4f), new List<Ship> { transport }, new List<Material> { gems });
+            // buildings
+            dwellBlock = new Building(Content.Load<Texture2D>("building2"),3,new Vector2(0,0),new Vector2(1,1));
+            dwellBlockLarge = new Building(Content.Load<Texture2D>("building5"), 3, new Vector2(0, 0), new Vector2(1, 1));
+            govTower = new Building(Content.Load<Texture2D>("building3"), 1, new Vector2(0, 0), new Vector2(3, 3));
+            Factory = new Building(Content.Load<Texture2D>("building4"), 2, new Vector2(0, 0), new Vector2(2, 1));
+            Arena = new Building(Content.Load<Texture2D>("building1"), 1, new Vector2(0, 0), new Vector2(2, 2));
 
-            cities = new List<City> { city, otherCity, anotherCity };
-
+            // cities
+            
+            modCity = new ModCity("Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(20, 3), isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1),new Tuple<Building,int>(Factory,3) }, GraphicsDevice, random);
+            modCity2 = new ModCity("Another Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(30, 5), isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1), new Tuple<Building, int>(Factory, 3) }, GraphicsDevice, random);
+            homeModCity = new ModCity("Home Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(10, 10), isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1), new Tuple<Building, int>(Factory, 3) }, GraphicsDevice, random, true);
+            
+            modCities = new List<ModCity> { modCity, modCity2,homeModCity };
 
             universe = new DeadObject(Content.Load<Texture2D>("universe"), new Vector2(50, 44), isoGrid);
             uiball = new DeadUIObject(Content.Load<Texture2D>("rball"), new Vector2(10, 10));
 
 
             // accesible region and paths
-            reach = new ReachableArea(isoGrid, cities);
+            reach = new ReachableArea(isoGrid, modCities);
             path = new Path(reach);
         }
 
@@ -175,16 +193,18 @@ namespace Multiverse
 
             // update cities and their ships
 
-            foreach (City cty in cities)
-            {
-                cty.Update(cursor,cameraTransform,buttons,GraphicsDevice,path,isoGrid,city);
+            
 
-                foreach (Ship shp in cty.ships)
+            foreach (ModCity mod in modCities)
+            {
+
+                mod.Update(cursor, cameraTransform, buttons, GraphicsDevice, path, isoGrid, homeModCity);
+
+                foreach (Ship shp in mod.ships)
                 {
-                    shp.Update(city, isoGrid, gameTime);
+                    shp.Update(homeModCity, isoGrid, gameTime);
                 }
             }
-           
 
             base.Update(gameTime);
         }
@@ -213,13 +233,14 @@ namespace Multiverse
             tiles.Draw(spriteBatch);
 
             // objects
-            foreach (City cty in cities)
+            
+            foreach (ModCity mod in modCities)
             {
-                cty.Draw(spriteBatch,font);;
+                mod.Draw(spriteBatch, font);
 
-                foreach (Ship shp in cty.ships)
+                foreach (Ship shp in mod.ships)
                 {
-                    shp.Draw(spriteBatch,path,GraphicsDevice,isoGrid);
+                    shp.Draw(spriteBatch, path, GraphicsDevice, isoGrid);
                 }
             }
 
@@ -243,10 +264,10 @@ namespace Multiverse
             }
 
             // city HUD when present
-            foreach (City cty in cities)
+            
+            foreach (ModCity mod in modCities)
             {
-                cty.HUDDraw(spriteBatch, font);
-
+                mod.HUDDraw(spriteBatch, font);
             }
 
             cursor.Draw(spriteBatch);

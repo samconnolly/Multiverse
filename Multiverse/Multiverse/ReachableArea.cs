@@ -22,11 +22,11 @@ namespace Multiverse
         public int height;
         private int[,] reachable;
 
-        private List<City> cityList;
+        private List<ModCity> cityList;
 
         // The public instance class
 
-        public ReachableArea(IsoGrid grid, List<City> citiesList)
+        public ReachableArea(IsoGrid grid, List<ModCity> citiesList)
         {
             
             this.width  = (int)grid.size.X;
@@ -44,9 +44,9 @@ namespace Multiverse
 
             this.cityList = citiesList;
 
-            foreach (City city in cityList)
+            foreach (ModCity city in cityList)
             {
-                reachable[(int)city.gridposition.X - 1, (int)city.gridposition.Y - 1] = 1;
+                reachable[(int)city.gridposition.X , (int)city.gridposition.Y ] = 1;
 
             }
         }
@@ -77,7 +77,7 @@ namespace Multiverse
 
         }
 
-        public void Update(List<City> citiesList)
+        public void Update(List<ModCity> citiesList)
         {
             for (int x = 0; x < (width); x++)
             {
@@ -89,7 +89,7 @@ namespace Multiverse
 
             this.cityList = citiesList;
 
-            foreach (City city in cityList)
+            foreach (ModCity city in cityList)
             {
                 for (int x = 0; x < city.footprint.X; x++)
                 {

@@ -108,14 +108,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Building.cs" />
     <Compile Include="Button.cs" />
-    <Compile Include="City.cs" />
+    <Compile Include="CityIsogrid.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="DeadObject.cs" />
     <Compile Include="DeadUIObject.cs" />
     <Compile Include="gridTile.cs" />
     <Compile Include="IsoGrid.cs" />
     <Compile Include="Material.cs" />
+    <Compile Include="ModCity.cs" />
     <Compile Include="pathcalc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

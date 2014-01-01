@@ -52,12 +52,12 @@ namespace Multiverse
             this.drawOffset = new Vector2(-rect.X / 2, -rect.Y / 2);
         }
 
-        public void StartRoute(City city, City homeCity, IsoGrid isogrid, Path path)
+        public void StartRoute(ModCity city, ModCity homeCity, IsoGrid isogrid, Path path)
         {
             // calculate a path for movement
 
             running = true;
-            drawPath = path.PathList(homeCity.gridposition + new Vector2(1, 1), city.gridposition + new Vector2(1, 1), isogrid);
+            drawPath = path.PathList(homeCity.gridposition + new Vector2(2, 2), city.gridposition + new Vector2(2, 2), isogrid);
             pathStep = 1;
             walkingTarget = drawPath[pathStep];
 
@@ -65,7 +65,8 @@ namespace Multiverse
             position = isogrid.gridCoords( homeCity.position);
         }
 
-        public void Update(City homeCity, IsoGrid isogrid, GameTime gametime)
+
+        public void Update(ModCity homeCity, IsoGrid isogrid, GameTime gametime)
         {
            
             // continuous movement
