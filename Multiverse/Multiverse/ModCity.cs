@@ -30,6 +30,7 @@ namespace Multiverse
         public List<Ship> ships;
         public List<Material> materials;
         public List<Tuple<Building, int, Vector2>> buildings = new List<Tuple<Building, int, Vector2>> { };
+        public List<Tuple<Building, int>> buildingTypes;
 
         private bool clicked;
         public bool player;
@@ -39,9 +40,8 @@ namespace Multiverse
         private bool tradeDeal = false;
 
         private CityIsoGrid isogrid;
-        private Vector2 gridOffset = new Vector2(20, 85);
 
-        public ModCity(string name, Texture2D texture, Texture2D highlightTexture, Texture2D clickedTexture, Vector2 gridposition, IsoGrid grid, Tuple<float, float, float> politicalStanding, List<Ship> shipList, List<Material> materialList, List<Tuple<Building, int>> buildingList, GraphicsDevice graphicsDevice,Random random, bool playerCity = false)
+        public ModCity(string name, Texture2D texture, Texture2D highlightTexture, Texture2D clickedTexture, Vector2 gridposition,Vector2 gridOffset,float size, IsoGrid grid, Tuple<float, float, float> politicalStanding, List<Ship> shipList, List<Material> materialList, List<Tuple<Building, int>> buildingList, GraphicsDevice graphicsDevice,Random random, bool playerCity = false)
         {
             this.lowTex = texture;
             this.highTex = highlightTexture;
@@ -56,19 +56,19 @@ namespace Multiverse
             this.politics = politicalStanding;
             this.ships = shipList;
             this.materials = materialList;
-            
+            this.buildingTypes = buildingList;
             
             this.tex = lowTex;
 
-            this.isogrid = new CityIsoGrid(graphicsDevice, Math.PI / 6.0, 8, new Vector2(8, 8),position + gridOffset);
+            this.isogrid = new CityIsoGrid(graphicsDevice, Math.PI / 6.0, 8, size ,position + gridOffset);
 
             // fill grid with buildings in random positions
 
             List<Vector2> positions = new List<Vector2>{}; // list of possible positions...
 
-             for (int i=0;i<isogrid.size.X;i++)
+             for (int i=0;i<isogrid.size;i++)
             {
-                for (int j=0;j<isogrid.size.Y;j++)
+                for (int j=0;j<isogrid.size;j++)
                 {
                     if (isogrid.usage[i,j] == 0)
                     {
@@ -154,7 +154,7 @@ namespace Multiverse
 
                         if (player == false && tradeDeal == false)
                         {
-                            tradeButton = new Button(new Vector2(10, 350), 150, 40, "Trade", graphicsDevice);
+                            tradeButton = new Button(new Vector2(10, 750), 150, 40, "Trade", graphicsDevice);
                             buttons.Add(tradeButton);
                         }
                     }
@@ -264,6 +264,16 @@ namespace Multiverse
                 foreach (Material material in materials)
                 {
                     sbatch.DrawString(font, material.name.ToString(), new Vector2(10, y), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.03f);
+                    y += 20;
+                }
+
+                y += 20;
+                sbatch.DrawString(font, "Buildings:", new Vector2(10, y), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.03f);
+                y += 20;
+
+                foreach (Tuple<Building, int> building in buildingTypes)
+                {
+                    sbatch.DrawString(font, building.Item1.name.ToString() + ": " + building.Item2.ToString(), new Vector2(10, y), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.03f);
                     y += 20;
                 }
 

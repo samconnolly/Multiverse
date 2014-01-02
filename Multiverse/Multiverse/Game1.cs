@@ -24,7 +24,7 @@ namespace Multiverse
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
 
         }
 
@@ -66,12 +66,15 @@ namespace Multiverse
         Building dwellBlock;
         Building dwellBlockLarge;
         Building govTower;
+        Building hugeGovTower;
         Building Factory;
         Building Arena;
 
         ModCity modCity;
         ModCity modCity2;
+        ModCity fullCity;
         ModCity homeModCity;
+        ModCity hugeCity;
 
         List<ModCity> modCities;
 
@@ -123,21 +126,25 @@ namespace Multiverse
             gems = new Material("Gemstones");
 
             // buildings
-            dwellBlock = new Building(Content.Load<Texture2D>("building2"),3,new Vector2(0,0),new Vector2(1,1));
-            dwellBlockLarge = new Building(Content.Load<Texture2D>("building5"), 3, new Vector2(0, 0), new Vector2(1, 1));
-            govTower = new Building(Content.Load<Texture2D>("building3"), 1, new Vector2(0, 0), new Vector2(3, 3));
-            Factory = new Building(Content.Load<Texture2D>("building4"), 2, new Vector2(0, 0), new Vector2(2, 1));
-            Arena = new Building(Content.Load<Texture2D>("building1"), 1, new Vector2(0, 0), new Vector2(2, 2));
+            dwellBlock = new Building("Dwelling Block",Content.Load<Texture2D>("building2"),3,new Vector2(0,0),new Vector2(1,1));
+            dwellBlockLarge = new Building("Large Dwelling Block",Content.Load<Texture2D>("building5"), 3, new Vector2(0, 0), new Vector2(1, 1));
+            govTower = new Building("Goverment Central Tower",Content.Load<Texture2D>("building3"), 1, new Vector2(0, 0), new Vector2(3, 3));
+            hugeGovTower = new Building("Huge Governemnt Central Tower", Content.Load<Texture2D>("hugeGovernmentTower"), 1, new Vector2(0, 0), new Vector2(12, 12));
+            Factory = new Building("Factory",Content.Load<Texture2D>("building4"), 2, new Vector2(0, 0), new Vector2(2, 1));
+            Arena = new Building("Entertainment Arena",Content.Load<Texture2D>("building1"), 1, new Vector2(0, 0), new Vector2(2, 2));
 
             // cities
             
-            modCity = new ModCity("Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(20, 3), isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1),new Tuple<Building,int>(Factory,3) }, GraphicsDevice, random);
-            modCity2 = new ModCity("Another Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(30, 5), isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1), new Tuple<Building, int>(Factory, 3) }, GraphicsDevice, random);
-            homeModCity = new ModCity("Home Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(10, 10), isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1), new Tuple<Building, int>(Factory, 3) }, GraphicsDevice, random, true);
+            modCity = new ModCity("Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(20, 3),new Vector2(20, 85),8, isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1),new Tuple<Building,int>(Factory,3) }, GraphicsDevice, random);
+            modCity2 = new ModCity("Another Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(30, 5),new Vector2(20, 85),8, isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1), new Tuple<Building, int>(Factory, 3) }, GraphicsDevice, random);
+            homeModCity = new ModCity("Home Customisable City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(10, 10),new Vector2(20, 85),8, isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 4), new Tuple<Building, int>(dwellBlockLarge, 4), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 1), new Tuple<Building, int>(Factory, 3) }, GraphicsDevice, random, true);
+            hugeCity = new ModCity("Huge City", Content.Load<Texture2D>("hugecity"), Content.Load<Texture2D>("hugecityHigh"), Content.Load<Texture2D>("hugecityClick"), new Vector2(30, 30), new Vector2(-100,280), 90, isoGrid, new Tuple<float, float, float>(0.30f, 0.30f, 0.4f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> {new Tuple<Building, int>(hugeGovTower,1), new Tuple<Building, int>(dwellBlock, 1000), new Tuple<Building, int>(dwellBlockLarge, 400), new Tuple<Building, int>(govTower, 1), new Tuple<Building, int>(Arena, 50), new Tuple<Building, int>(Factory, 300) }, GraphicsDevice, random);
+            fullCity = new ModCity("A Full City", Content.Load<Texture2D>("smallcity"), Content.Load<Texture2D>("smallcityHigh"), Content.Load<Texture2D>("smallcityClick"), new Vector2(10, 15), new Vector2(7, 90), 9, isoGrid, new Tuple<float, float, float>(0.33f, 0.33f, 0.34f), new List<Ship> { trader }, new List<Material> { metal }, new List<Tuple<Building, int>> { new Tuple<Building, int>(dwellBlock, 64)}, GraphicsDevice, random);
             
-            modCities = new List<ModCity> { modCity, modCity2,homeModCity };
 
-            universe = new DeadObject(Content.Load<Texture2D>("universe"), new Vector2(50, 44), isoGrid);
+            modCities = new List<ModCity> { modCity, modCity2,homeModCity,hugeCity,fullCity };
+
+            universe = new DeadObject(Content.Load<Texture2D>("universe"), new Vector2(90, 94), isoGrid);
             uiball = new DeadUIObject(Content.Load<Texture2D>("rball"), new Vector2(10, 10));
 
 

@@ -17,25 +17,25 @@ namespace Multiverse
         Texture2D blank;
         double angle;
         int edge;
-        public Vector2 size;
+        public float size;
         public Vector2 position;
         public int[,] usage;
 
-        public CityIsoGrid(GraphicsDevice graphicsDevice, double gridAngle, int edgeLength, Vector2 gridSize,Vector2 position)
+        public CityIsoGrid(GraphicsDevice graphicsDevice, double gridAngle, int edgeLength, float diameter,Vector2 position)
         {
             this.angle = gridAngle;
             this.edge = edgeLength;
-            this.size = gridSize;
+            this.size = diameter;
             this.position = position;
-            this.usage = new int[(int)gridSize.X, (int)gridSize.Y];
+            this.usage = new int[(int)diameter, (int)diameter];
 
             // fill grid with free spaces, except corners
 
-            for (int i=0;i<gridSize.X;i++)
+            for (int i=0;i<size;i++)
             {
-                for (int j=0;j<gridSize.Y;j++)
+                for (int j=0;j<size;j++)
                 {
-                    if ((i == 0 && (j == 0 || j== gridSize.Y-1)) || (i == gridSize.X -1 && (j == 0 || j== gridSize.Y-1)))
+                    if (Math.Pow((double)(i - (size / 2.0)), 2) + Math.Pow((double)(j - (size / 2.0)), 2) >= Math.Pow((double)(size / 2.0), 2))
                     {
                         usage[i,j] = 1;
                     }
@@ -86,10 +86,10 @@ namespace Multiverse
 
         public void Draw(SpriteBatch sbatch)
         {
-            for (int i = 0; i < size.Y + 1; i++)
+            for (int i = 0; i < size + 1; i++)
             {
 
-                Tuple<Vector2, Vector2> line4 = new Tuple<Vector2, Vector2>(gridEdgeCoords(new Vector2(i, 0)), gridEdgeCoords(new Vector2(i, size.Y))); //CartesianCoords(new Vector2(x, 0)), CartesianCoords(new Vector2(x, (float) rows-1))
+                Tuple<Vector2, Vector2> line4 = new Tuple<Vector2, Vector2>(gridEdgeCoords(new Vector2(i, 0)), gridEdgeCoords(new Vector2(i, size))); //CartesianCoords(new Vector2(x, 0)), CartesianCoords(new Vector2(x, (float) rows-1))
 
                 float angle4 = (float)Math.Atan2(line4.Item2.Y - line4.Item1.Y, line4.Item2.X - line4.Item1.X);
                 float length4 = Vector2.Distance(line4.Item1, line4.Item2);
@@ -98,9 +98,9 @@ namespace Multiverse
 
             }
 
-            for (int j = 0; j < size.X + 1; j++)
+            for (int j = 0; j < size + 1; j++)
             {
-                Tuple<Vector2, Vector2> line4 = new Tuple<Vector2, Vector2>(gridEdgeCoords(new Vector2(0, j)), gridEdgeCoords(new Vector2(size.X, j))); //CartesianCoords(new Vector2(x, 0)), CartesianCoords(new Vector2(x, (float) rows-1))
+                Tuple<Vector2, Vector2> line4 = new Tuple<Vector2, Vector2>(gridEdgeCoords(new Vector2(0, j)), gridEdgeCoords(new Vector2(size, j))); //CartesianCoords(new Vector2(x, 0)), CartesianCoords(new Vector2(x, (float) rows-1))
 
                 float angle4 = (float)Math.Atan2(line4.Item2.Y - line4.Item1.Y, line4.Item2.X - line4.Item1.X);
                 float length4 = Vector2.Distance(line4.Item1, line4.Item2);
